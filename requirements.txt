@@ -1,0 +1,88 @@
+# Height Gate System
+**Virtual Line Height Detection — Edge AI**
+Jetson Orin NX | OpenCV + MediaPipe Pose
+
+---
+
+## Concept
+
+```
+Camera (mounted in front of door)
+        ↓
+  ─────────────────  ← threshold line (adjustable)
+        ↓
+  Head ABOVE line  →  OK
+  Head BELOW line  →  NOT OK
+```
+
+No calibration needed. Set the line visually — adjust until correct, lock it, done.
+
+---
+
+## Setup
+
+```bash
+chmod +x setup.sh
+./setup.sh
+```
+
+---
+
+## How to Run
+
+```bash
+python3 main.py              # camera 0
+python3 main.py --camera 1   # other camera
+python3 main.py --flip       # mirror if needed
+```
+
+---
+
+## How to Set the Line (one-time setup)
+
+1. Run the program
+2. Have a person with the **minimum allowed height** stand in front of the camera
+3. Adjust the line so it sits **just above their head**:
+   - `W` = up 1px
+   - `S` = down 1px
+   - `A` = up 10px
+   - `D` = down 10px
+4. Press `L` to **lock + save**
+5. Done — line is saved to `gate_line.json` and auto-loaded on every run
+
+---
+
+## Hotkeys
+
+| Key | Function |
+|-----|----------|
+| `W` | Line up 1px |
+| `S` | Line down 1px |
+| `A` | Line up 10px |
+| `D` | Line down 10px |
+| `L` | Lock/Unlock line + auto-save |
+| `SPACE` | Log current result to gate_log.txt |
+| `Q` | Quit |
+
+---
+
+## Output
+
+gate_line.json — line position (auto-saved on lock):
+  line_y, ratio, frame_h
+
+gate_log.txt — log when SPACE is pressed:
+  2024-01-15 10:32:41  OK      head=198px  line=215px
+  2024-01-15 10:33:05  NOT_OK  head=248px  line=215px
+
+---
+
+## Files
+
+height_system/
+├── main.py           <- Main program
+├── requirements.txt
+├── setup.sh
+├── README.md
+├── gate_line.json    <- Auto-generated on lock
+└── gate_log.txt      <- Auto-generated on SPACE
